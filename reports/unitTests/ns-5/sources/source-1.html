@@ -1,0 +1,169 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > GlobalExceptionHandler</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.finance.transactionmanager.exceptions</a>
+</div>
+
+<h1>Coverage Summary for Class: GlobalExceptionHandler (com.finance.transactionmanager.exceptions)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GlobalExceptionHandler</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/15)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.finance.transactionmanager.exceptions;
+&nbsp;
+&nbsp;import com.finance.transactionmanager.exceptions.custom.BadRequestException;
+&nbsp;import com.finance.transactionmanager.exceptions.custom.InternalServerErrorException;
+&nbsp;import com.finance.transactionmanager.exceptions.custom.NotFoundException;
+&nbsp;import jakarta.servlet.http.HttpServletRequest;
+&nbsp;import lombok.extern.log4j.Log4j2;
+&nbsp;import org.hibernate.PropertyValueException;
+&nbsp;import org.springframework.http.HttpStatus;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.http.converter.HttpMessageNotReadableException;
+&nbsp;import org.springframework.web.bind.MethodArgumentNotValidException;
+&nbsp;import org.springframework.web.bind.annotation.ControllerAdvice;
+&nbsp;import org.springframework.web.bind.annotation.ExceptionHandler;
+&nbsp;
+&nbsp;import java.time.Instant;
+&nbsp;
+&nbsp;@ControllerAdvice
+<b class="nc">&nbsp;@Log4j2</b>
+<b class="nc">&nbsp;public class GlobalExceptionHandler {</b>
+&nbsp;    @ExceptionHandler({
+&nbsp;            Exception.class,
+&nbsp;            RuntimeException.class,
+&nbsp;            InternalServerErrorException.class
+&nbsp;    })
+&nbsp;    public ResponseEntity&lt;StandardError&gt; handleInternalServerError(Throwable e, HttpServletRequest request) {
+<b class="nc">&nbsp;        return getStandardErrorResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, e, request);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @ExceptionHandler({
+&nbsp;            NotFoundException.class
+&nbsp;    })
+&nbsp;    public ResponseEntity&lt;StandardError&gt; handleNotFound(Throwable e, HttpServletRequest request) {
+<b class="nc">&nbsp;        return getStandardErrorResponseEntity(HttpStatus.NOT_FOUND, e, request);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @ExceptionHandler({
+&nbsp;            BadRequestException.class,
+&nbsp;            PropertyValueException.class,
+&nbsp;            HttpMessageNotReadableException.class,
+&nbsp;            MethodArgumentNotValidException.class
+&nbsp;    })
+&nbsp;    public ResponseEntity&lt;StandardError&gt; handleBadRequest(Throwable e, HttpServletRequest request) {
+<b class="nc">&nbsp;        return getStandardErrorResponseEntity(HttpStatus.BAD_REQUEST, e, request);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private ResponseEntity&lt;StandardError&gt; getStandardErrorResponseEntity(HttpStatus status,
+&nbsp;                                                                         Throwable e,
+&nbsp;                                                                         HttpServletRequest request) {
+<b class="nc">&nbsp;        logError(e);</b>
+&nbsp;
+<b class="nc">&nbsp;        return ResponseEntity</b>
+<b class="nc">&nbsp;                .status(status)</b>
+<b class="nc">&nbsp;                .body(StandardError.builder()</b>
+<b class="nc">&nbsp;                        .timestamp(Instant.now())</b>
+<b class="nc">&nbsp;                        .status(status.value())</b>
+<b class="nc">&nbsp;                        .error(e.getMessage())</b>
+<b class="nc">&nbsp;                        .path(request.getRequestURL().toString())</b>
+<b class="nc">&nbsp;                        .build());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void logError(Throwable e) {
+<b class="nc">&nbsp;        log.error(e.getMessage(), e);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-10-14 23:37</div>
+</div>
+</body>
+</html>

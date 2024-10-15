@@ -66,8 +66,8 @@ This project is designed with functional automated tests to ensure that the API 
 the tests, use Maven: ```mvn test```. The aforementioned scripts automate this part too, so it won't build or run if any
 tests fail.
 
-Please note that the full coverage report is attached. Refer to [Unit test reports](reports) directory (requires 
-browser, open ```index.html```).
+Please note that the full coverage report is attached. Refer to [Unit test reports](reports) directory (zipped html page,
+requires browser, unzip and open ```index.html```).
 
 # External Dependencies
 

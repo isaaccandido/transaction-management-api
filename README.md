@@ -67,7 +67,7 @@ the tests, use Maven: ```mvn test```. The aforementioned scripts automate this p
 tests fail.
 
 Please note that the full coverage report is attached. Refer to [Unit test reports](reports) directory (requires 
-browser, open ```index.html```.).
+browser, open ```index.html```).
 
 # External Dependencies
 
@@ -87,13 +87,13 @@ been used here solely for the purposes of this exercise, as the database is an i
 scenario, credentials would be securely managed, likely using Spring Cloud integrated with a Vault server to store
 them on a secure cloud service. Thank you for your understanding.
 
-Furthermore, Security measures, such as protecting endpoints and implementing JWT authentication, can be easily
+Furthermore, security measures, such as protecting endpoints and implementing JWT authentication, can be easily
 integrated without requiring significant changes to the overall structure.
 
 ## Database Solution
 
 It was selected the H2 in-memory database to maintain a simple and defined database implementation. The H2 console can
-be accessed via a web browser at {BASE_URL}/api/v1/h2-console, with credentials specified in the application.yaml file.
+be accessed via a web browser at ```{BASE_URL}/api/v1/h2-console```, with credentials specified in the application.yaml file.
 This choice ensures full JPA functionality while enabling seamless transitions to other database providers with minimal
 adjustments, if required.
 

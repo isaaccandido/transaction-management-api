@@ -2,38 +2,34 @@
 
 set -e
 
-JAVA_VERSION=21
-JAVA_URL=https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.tar.gz
-JAVA_DIR="$(dirname "$0")/java"
+DOCKER_CMD="docker"
+DOCKER_URL="https://get.docker.com"
+DOCKER_DIR="$(dirname "$0")"
 
-if ! command -v curl &> /dev/null; then
-    echo "curl is not installed. Please install curl and try again."
-    exit 1
+if ! command -v "$DOCKER_CMD" &> /dev/null; then
+    echo "Docker is not installed. Installing Docker..."
+
+    curl -fsSL "$DOCKER_URL" -o get-docker.sh
+    sh get-docker.sh
+    rm get-docker.sh
+
+    echo "Docker installed successfully."
+else
+    echo "Docker is already installed."
 fi
 
-mkdir -p "$JAVA_DIR"
-
-if [ ! -d "$JAVA_DIR/jdk-$JAVA_VERSION" ]; then
-    curl -L -o "$JAVA_DIR/jdk.tar.gz" "$JAVA_URL"
-    tar -xzf "$JAVA_DIR/jdk.tar.gz" -C "$JAVA_DIR"
-
-    JDK_DIR=$(find "$JAVA_DIR" -maxdepth 1 -type d -name "jdk-*")
-
-    if [ -z "$JDK_DIR" ]; then
-        echo "Failed to extract JDK. Check if the download was successful."
-        exit 1
-    fi
-
-    mv "$JDK_DIR" "$JAVA_DIR/jdk-$JAVA_VERSION"
-    rm "$JAVA_DIR/jdk.tar.gz"
+if ! systemctl is-active --quiet docker; then
+    echo "Starting Docker service..."
+    sudo systemctl start docker
 fi
 
-export JAVA_HOME="$JAVA_DIR/jdk-$JAVA_VERSION"
-export PATH="$JAVA_HOME/bin:$PATH"
+if ! groups $(whoami) | grep -q "\bdocker\b"; then
+    echo "Adding current user to the 'docker' group..."
+    sudo usermod -aG docker $(whoami)
+    echo "You may need to log out and log back in for group changes to take effect."
+fi
 
 chmod +x ./mvnw
 
-java -version
-
+echo "Building and running the Spring Boot application..."
 ./mvnw clean package spring-boot:run
-

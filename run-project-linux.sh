@@ -33,7 +33,7 @@ if command -v nft &> /dev/null; then
 fi
 
 if [ -f docker-compose.yml ]; then
-    docker compose up -d --build
+    sudo docker compose up -d --build
 else
     exit 1
 fi

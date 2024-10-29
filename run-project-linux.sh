@@ -1,39 +1,31 @@
 #!/bin/bash
 
-set -e
-
-JAVA_VERSION=21
-JAVA_URL=https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.tar.gz
-JAVA_DIR="$(dirname "$0")/java"
-
-if ! command -v curl &> /dev/null; then
-    echo "curl is not installed. Please install curl and try again."
-    exit 1
-fi
-
-mkdir -p "$JAVA_DIR"
-
-if [ ! -d "$JAVA_DIR/jdk-$JAVA_VERSION" ]; then
-    curl -L -o "$JAVA_DIR/jdk.tar.gz" "$JAVA_URL"
-    tar -xzf "$JAVA_DIR/jdk.tar.gz" -C "$JAVA_DIR"
-
-    JDK_DIR=$(find "$JAVA_DIR" -maxdepth 1 -type d -name "jdk-*")
-
-    if [ -z "$JDK_DIR" ]; then
-        echo "Failed to extract JDK. Check if the download was successful."
+if ! command -v docker &> /dev/null
+then
+    for pkg in docker.io docker-doc docker-compose podman-docker containerd runc; do sudo apt-get remove -y $pkg; done
+    sudo apt update -y
+    sudo apt install -y apt-transport-https ca-certificates curl software-properties-common ufw
+    sudo install -m 0755 -d /etc/apt/keyrings
+    curl -fsSL https://download.docker.com/linux/debian/gpg | sudo tee /etc/apt/keyrings/docker.asc
+    sudo chmod a+r /etc/apt/keyrings/docker.asc
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    sudo apt update -y
+    sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+	
+    if command -v docker &> /dev/null
+    then
+        sudo usermod -aG docker $USER
+        docker --version
+    else
         exit 1
     fi
-
-    mv "$JDK_DIR" "$JAVA_DIR/jdk-$JAVA_VERSION"
-    rm "$JAVA_DIR/jdk.tar.gz"
+else
+    docker --version
 fi
 
-export JAVA_HOME="$JAVA_DIR/jdk-$JAVA_VERSION"
-export PATH="$JAVA_HOME/bin:$PATH"
-
-chmod +x ./mvnw
-
-java -version
-
-./mvnw clean package spring-boot:run
+if [ -f docker-compose.yml ]; then
+    sudo docker compose up -d --build
+else
+    exit 1
+fi
 

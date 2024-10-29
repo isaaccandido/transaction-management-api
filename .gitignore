@@ -37,3 +37,5 @@ build/
 
 # Ignore any temporary JDK directories
 jdk-temp/
+
+wsl_update_x64.msi

@@ -8,9 +8,10 @@ if %ERRORLEVEL% EQU 0 (
 ) else (
     echo Docker not found. Installing Docker Desktop...
 
-    REM Enable WSL and Virtual Machine Platform if needed
+    REM Enable WSL, Virtual Machine Platform, and Hyper-V
     dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
     dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
+    dism.exe /Online /Enable-Feature /All /FeatureName:Microsoft-Hyper-V
 
     REM Check if reboot is needed
     if %ERRORLEVEL% EQU 3010 (

@@ -225,4 +225,8 @@ the refresh, provided caching is enabled. The goal of this feature is to achieve
 
 --- 
 
-# Thanks for the opportunity!
+# Docker Integration (Update 29/10/2024)
+
+- Implemented Docker scripts to streamline and automate the deployment process.
+- Migrated from H2 in-memory database to PostgreSQL for enhanced data persistence and performance.
+- Enhanced execution scripts to support automatic environment setup across Windows and Linux hosts, ensuring consistent configuration and compatibility.
